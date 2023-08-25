@@ -73,7 +73,7 @@ func getRDSInstances(sess *session.Session, region string, ch chan<- string) {
 	}
 
 	for _, instance := range result.DBInstances {
-		ch <- fmt.Sprintf("%s, %s, %s, %v", region, *instance.CACertificateIdentifier, *instance.DBInstanceIdentifier)
+		ch <- fmt.Sprintf("%s, %s, %s", region, *instance.CACertificateIdentifier, *instance.DBInstanceIdentifier)
 	}
 }
 
