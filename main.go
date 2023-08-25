@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -28,16 +29,24 @@ func main() {
 	}
 
 	var wg sync.WaitGroup
-	ch := make(chan string)
+
+	// Use a buffered channel
+	ch := make(chan string, len(regionsFlag))
 
 	// Print header
 	fmt.Println("DB Name, Region, CA Cert")
+
+	// Create a single session
+	sess := session.Must(session.NewSessionWithOptions(session.Options{
+		Profile:           profileFlag,
+		SharedConfigState: session.SharedConfigEnable,
+	}))
 
 	for _, region := range regionsFlag {
 		wg.Add(1)
 		go func(region string) {
 			defer wg.Done()
-			getRDSInstances(region, ch)
+			getRDSInstances(sess, region, ch)
 		}(region)
 	}
 
@@ -51,19 +60,16 @@ func main() {
 	}
 }
 
-func getRDSInstances(region string, ch chan<- string) {
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		Config:            aws.Config{Region: aws.String(region)},
-		Profile:           profileFlag,
-		SharedConfigState: session.SharedConfigEnable,
-	}))
+func getRDSInstances(sess *session.Session, region string, ch chan<- string) {
+	// Use the session and just change the region for the service client
+	svc := rds.New(sess, &aws.Config{Region: aws.String(region)})
 
-	svc := rds.New(sess)
 	input := &rds.DescribeDBInstancesInput{}
 
 	result, err := svc.DescribeDBInstances(input)
 	if err != nil {
-		fmt.Println("Error getting RDS instances:", err)
+		// Consider using log.Printf instead of fmt for better error handling
+		fmt.Println("Error getting RDS instances for region", region, ":", err)
 		return
 	}
 
