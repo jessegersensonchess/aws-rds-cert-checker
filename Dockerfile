@@ -12,8 +12,8 @@ RUN go mod init aws-rds-cert-checker
 RUN go get github.com/aws/aws-sdk-go
 
 # Build the Go app
-RUN go build -o main .
+RUN go build -o aws-rds-cert-checker .
 
 # Run the binary program produced by `go build`
-CMD ["./main"]
+ENTRYPOINT ["./aws-rds-cert-checker"]
 
