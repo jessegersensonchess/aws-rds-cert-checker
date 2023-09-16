@@ -30,10 +30,7 @@ jobs:
 
     - name: Build
       run: |
-        go mod init aws-rds-cert-checker
-        go get github.com/aws/aws-sdk-go
         CGO_ENABLED=0 go build -ldflags="-s -w" -o ${{ env.binary }}
-        chmod +x ${{ env.binary }}
 
 #    - name: Test
 #      run: go test -v ./...
