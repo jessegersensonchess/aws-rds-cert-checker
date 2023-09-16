@@ -3,7 +3,7 @@
 
 name: Go
 env:
-  binary: github-utility
+  binary: aws-rds-cert-checker
 on:
   workflow_dispatch:
   push:
