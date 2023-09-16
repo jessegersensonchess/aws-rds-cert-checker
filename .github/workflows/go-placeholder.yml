@@ -10,8 +10,8 @@ on:
     branches: [ "main" ]
     tags:
       - 'release'
-#  schedule:
-#    - cron: "00 06 * * 6"
+  schedule:
+    - cron: "00 06 * * 6"
   pull_request:
     branches: [ "main" ]
 
@@ -47,12 +47,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+
     - name: 'Download Artifact'
       uses: actions/download-artifact@v3
       with:
         name: ${{ env.binary }}
+
     - name: Set permissions
       run: chmod +x ${{ env.binary }}
+
     - name: 'Create GitHub Release'
       id: create-new-release
       uses: actions/create-release@v1
@@ -61,6 +64,7 @@ jobs:
       with:
         tag_name: v0.0.${{github.run_number}}
         release_name: v0.0.${{github.run_number}}
+
     - name: Upload asset to Github Release
       uses: actions/upload-release-asset@v1
       env:
