@@ -7,13 +7,13 @@ env:
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
     tags:
       - 'release'
   schedule:
     - cron: "00 06 * * 6"
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
 
