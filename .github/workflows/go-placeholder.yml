@@ -41,7 +41,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.binary }}
-        path: ./
+        path: ./${{ env.binary }}
         
   release-content:
     runs-on: ubuntu-latest
